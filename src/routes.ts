@@ -19,6 +19,10 @@ export const routes: RouteDefinition[] = [
     component: lazy(() => import('./pages/utils/trans-trainer/index')),
   },
   {
+    path: '/u/pass-gen',
+    component: lazy(() => import('./pages/utils/pass-gen/index')),
+  },
+  {
     path: '**',
     component: lazy(() => import('./errors/404')),
   },
