@@ -1,6 +1,6 @@
-import { createSignal, onCleanup } from "solid-js";
+import { createSignal } from "solid-js";
 import { IoArrowBack } from 'solid-icons/io'
-import { useParams, useSearchParams } from "@solidjs/router";
+import { useSearchParams } from "@solidjs/router";
 enum Mode {
     Edit = 'edit',
     View = 'view',
