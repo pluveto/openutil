@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - main
 jobs:
   cache-and-deploy:
     runs-on: ubuntu-latest
