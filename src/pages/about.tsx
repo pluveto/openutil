@@ -14,7 +14,11 @@ export default function About() {
   return (
     <>
       <Title>{createTitle("About")}</Title>
-      <section class="bg-pink-100 text-gray-700 p-8">
+      <section class={
+        "p-8 " +
+        "bg-pink-100 text-gray-700 " +
+        "dark:bg-pink-900 dark:text-gray-300"
+      }>
         <h1 class="text-2xl font-bold">About</h1>
 
         <p class="mt-4">A page all about this website.</p>

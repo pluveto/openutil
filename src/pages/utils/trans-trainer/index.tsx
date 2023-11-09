@@ -3,6 +3,8 @@ import { IoArrowBack } from 'solid-icons/io'
 import { useSearchParams } from "@solidjs/router";
 import { Title } from "@solidjs/meta";
 import { createTitle } from "../../../common/misc-util";
+import MyTextarea from "../../../components/my-textarea";
+import MyButton from "../../../components/my-button";
 enum Mode {
     Edit = 'edit',
     View = 'view',
@@ -54,9 +56,9 @@ export default function Index() {
                 mode() === Mode.Edit &&
                 <section class="mt-2">
                     <form>
-                        <label for="textarea">Alternating Text:</label>
                         <p class="text-gray-400">Please alternate the original text and translation line by line, with the original text on the first line and the translation on the second line, and so on.</p>
-                        <textarea
+                        <label for="textarea">Alternating Text:</label>
+                        {/* <textarea
                             id="textarea"
                             class="mt-4 w-full h-24 p-2"
                             placeholder="Enter text here"
@@ -64,34 +66,40 @@ export default function Index() {
                             onChange={(e) => setText(e.currentTarget.value)}
                         >
                             {text()}
-                        </textarea>
+                        </textarea> */}
+                        <MyTextarea
+                            id="textarea"
+                            class="mt-4 w-full h-24 p-2"
+                            placeholder="Enter text here"
+                            onInput={(e) => setText(e.currentTarget.value)}
+                            onChange={(e) => setText(e.currentTarget.value)}
+                        >{text()}</MyTextarea>
 
-                        <button
+                        <MyButton
                             type="submit"
-                            class="mt-4 bg-blue-500 text-white px-2 py-1 ml-auto"
                             onClick={(e) => {
                                 e.preventDefault();
                                 saveState();
                                 setMode(Mode.View);
                                 setSearchParams({ mode: Mode.View });
-
                             }}
-                        >Confirm</button>
+                        >
+                            Confirm
+                        </MyButton>
                     </form>
                 </section>
             }
             {
                 mode() === Mode.View &&
                 <section class="mt-2">
-                    <button
-                        class="mt-4 bg-blue-500 text-white px-2 py-1 flex items-center"
+                    <MyButton
                         onClick={() => {
                             setMode(Mode.Edit)
                             setSearchParams({ mode: Mode.Edit });
                         }}
                     >
                         <IoArrowBack class="inline" /> Edit
-                    </button>
+                    </MyButton>
                     <ol class="mt-2">
                         {viewLines.map(([original, translation], index) => (
                             <li class="flex">

@@ -23,4 +23,38 @@ main a {
     @apply text-purple-500;
   }
 }
-  
+
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+  main a {
+    @apply text-blue-300;
+
+    :hover {
+      @apply text-blue-400;
+    }
+
+    :active {
+      @apply text-blue-500;
+    }
+
+    :focus {
+      @apply text-blue-500;
+    }
+
+    :visited {
+      @apply text-purple-300;
+    }
+  }
+
+  body {
+    @apply bg-gray-900;
+  }
+}
+
+html {
+  @apply min-h-full;
+}
+
+body {
+  @apply min-h-full;
+}

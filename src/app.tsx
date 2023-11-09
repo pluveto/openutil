@@ -10,7 +10,11 @@ const App: Component = () => {
   return (
     <>
       <Title>OpenUtil</Title>
-      <nav class="bg-gray-200 text-gray-900 px-4">
+      <nav class={
+        "px-4 " +
+        "bg-gray-200 text-gray-900 " +
+        "dark:bg-gray-800 dark:text-gray-100"
+      }>
         <ul class="flex items-center">
           <li class="py-2 px-4">
             <Link href="/" class="no-underline hover:underline">
@@ -25,7 +29,11 @@ const App: Component = () => {
         </ul>
       </nav>
 
-      <main class="bg-gray-100 text-gray-700 p-8">
+      <main class={
+        "p-8 " +
+        "bg-gray-100 text-gray-700 " +
+        "dark:bg-gray-900 dark:text-gray-300"
+      }>
         <Route />
       </main>
     </>
