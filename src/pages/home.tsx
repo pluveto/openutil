@@ -9,7 +9,7 @@ export default function Home() {
       </p>
       <h2 class="mt-4 text-xl font-bold">Recent</h2>
       <ul>
-        <li><a href="/u/trans-trainer">Translate Trainer</a></li>
+        <li><a href="#/u/trans-trainer">Translate Trainer</a></li>
       </ul>
     </main>
   );
