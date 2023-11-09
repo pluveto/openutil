@@ -19,7 +19,7 @@ export default function Index() {
     const [mode, setMode] = createSignal(searchParams.mode || Mode.Edit);
 
     const pairs = (text: string) => {
-        const lines = text.split("\n");
+        const lines = text.split("\n").filter((line) => line.trim() !== "");
         const linePairs = [];
         if (lines.length % 2 === 1) {
             lines.push("");
@@ -28,7 +28,6 @@ export default function Index() {
             linePairs.push([lines[i], lines[i + 1]]);
         }
 
-        console.log(linePairs);
         return linePairs;
     }
 
@@ -62,6 +61,7 @@ export default function Index() {
                             class="mt-4 w-full h-24 p-2"
                             placeholder="Enter text here"
                             onInput={(e) => setText(e.currentTarget.value)}
+                            onChange={(e) => setText(e.currentTarget.value)}
                         >
                             {text()}
                         </textarea>
