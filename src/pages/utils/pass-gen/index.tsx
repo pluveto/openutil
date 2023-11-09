@@ -36,6 +36,8 @@ export default function Index() {
         }
     }
     const [strength, setStrength] = createSignal('Medium');
+    console.log('strength', strength());
+
 
     createEffect((prev) => {
         // if strength changed, update charset and length
@@ -55,9 +57,10 @@ export default function Index() {
         if (s) {
             return new Set(s);
         } else {
-            return presets[strength()].charsets;
+            return new Set(presets[strength()].charsets);
         }
     }
+    console.log('defaultCharset()', defaultCharset());
 
     const [charsets, setCharset] = createSignal<Set<CharsetName>>(
         defaultCharset() as Set<CharsetName>
@@ -81,10 +84,10 @@ export default function Index() {
 
     const [length, setLength] = createSignal(8);
     const [excludeSimilar, setExcludeSimilar] = createSignal(false);
-    const [excludeSymbols, setExcludeSymbols] = createSignal(true);
+    const [excludeAmbiguous, setExcludeAmbiguous] = createSignal(true);
 
     const genPasswdAndSave = () => {
-        const generatedPassword = generatePassword(charsets(), length(), excludeSimilar(), excludeSymbols());
+        const generatedPassword = generatePassword(charsets(), length(), excludeSimilar(), excludeAmbiguous());
         setPassword(generatedPassword);
         saveStorage(passwordStoreKey, password());
     };
@@ -103,20 +106,17 @@ export default function Index() {
                                 label: strengthName
                             }))
                         } onInput={(e) => setStrength(e.currentTarget.value)} />
-                        <MySelect label="Character Set" options={
-                            charsetNames.map(charsetName => ({
-                                value: charsetName,
-                                label: charsetName
-                            }))
-                        } onInput={(e) => toggleCharset(e.currentTarget.value)} />
+                        {
+                            charsetNames.map(charsetName => (
+                                <MyCheckbox
+                                    label={charsetName}
+                                    id={charsetName}
+                                    checked={charsets().has(charsetName)}
+                                    onInput={() => toggleCharset(charsetName)}
+                                />
+                            ))
+                        }
 
-                        {/* <label for="length">Password Length:</label>
-                        <input
-                            id="length"
-                            type="number"
-                            value={length()}
-                            onInput={(e) => setLength(parseInt(e.currentTarget.value))}
-                        /> */}
                         <MyInput
                             label="Password Length"
                             type="number"
@@ -133,9 +133,9 @@ export default function Index() {
 
                         <MyCheckbox
                             label="Exclude ambiguous symbols"
-                            id="excludeSymbols"
-                            checked={excludeSymbols()}
-                            onInput={(e) => setExcludeSymbols(e.currentTarget.checked)}
+                            id="excludeAmbiguous"
+                            checked={excludeAmbiguous()}
+                            onInput={(e) => setExcludeAmbiguous(e.currentTarget.checked)}
                         />
 
                         <div>
