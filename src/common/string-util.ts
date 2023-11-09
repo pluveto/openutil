@@ -3,7 +3,7 @@ export type CharsetName = 'Uppercase' | 'Lowercase' | 'Numbers' | 'Symbols';
 export const charsetNames: CharsetName[] = ['Uppercase', 'Lowercase', 'Numbers', 'Symbols'];
 
 
-export function generatePassword(charsets: Set<CharsetName>, length: number, excludeSimilar: boolean, excludeSymbols: boolean): string {
+export function generatePassword(charsets: Set<CharsetName>, length: number, excludeSimilar: boolean, excludeAmbiguous: boolean): string {
     let candidates = '';
     const lowercase = 'abcdefghijklmnopqrstuvwxyz';
     const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -27,8 +27,8 @@ export function generatePassword(charsets: Set<CharsetName>, length: number, exc
         candidates = candidates.replace(/[ilLI|`oO0]/g, '');
     }
 
-    if (excludeSymbols) {
-        candidates = candidates.replace(/[!@#$%^&*()_+~`|}{[\]:;?><,./-]/g, '');
+    if (excludeAmbiguous) {
+        candidates = candidates.replace(/[!$%^&*()+~`|}{\\:?/]/g, '');
     }
 
     let passwd = '';
