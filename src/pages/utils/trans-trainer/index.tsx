@@ -1,6 +1,8 @@
 import { createSignal } from "solid-js";
 import { IoArrowBack } from 'solid-icons/io'
 import { useSearchParams } from "@solidjs/router";
+import { Title } from "@solidjs/meta";
+import { createTitle } from "../../../common/misc-util";
 enum Mode {
     Edit = 'edit',
     View = 'view',
@@ -31,8 +33,23 @@ export default function Index() {
     }
 
 
+    const viewLines = pairs(text());
+
+    const [toggled, setToggled] = createSignal(new Set<number>());
+
+    const toggle = (index: number) => () => {
+        const toggledSet = new Set(toggled());
+        if (toggledSet.has(index)) {
+            toggledSet.delete(index);
+        } else {
+            toggledSet.add(index);
+        }
+        setToggled(toggledSet);
+    }
+
     return (
-        <main class="bg-gray-100 text-gray-700 p-8">
+        <>
+            <Title>{createTitle("Translation Trainer")}</Title>
             <h1 class="text-2xl font-bold">Translation Trainer</h1>
             {
                 mode() === Mode.Edit &&
@@ -66,19 +83,6 @@ export default function Index() {
             {
                 mode() === Mode.View &&
                 <section class="mt-2">
-                    <ol>
-                        {pairs(text()).map(([original, translation], index) => (
-                            <li class="flex">
-                                <div class="mr-1 text-slate-500 font-serif select-none">
-                                    [{index + 1}]
-                                </div>
-                                <div class="right">
-                                    <div>{original}</div>
-                                    <div class="text-transparent hover:text-black">{translation}</div>
-                                </div>
-                            </li>
-                        ))}
-                    </ol>
                     <button
                         class="mt-4 bg-blue-500 text-white px-2 py-1 flex items-center"
                         onClick={() => {
@@ -88,8 +92,30 @@ export default function Index() {
                     >
                         <IoArrowBack class="inline" /> Edit
                     </button>
+                    <ol class="mt-2">
+                        {viewLines.map(([original, translation], index) => (
+                            <li class="flex">
+                                <div class="mr-1 text-slate-500 font-serif select-none">
+                                    [{index + 1}]
+                                </div>
+                                <div class="right">
+                                    <div>{original}
+                                        <a class="underline select-none" onclick={toggle(index)} href="javascript:;">
+                                            {toggled().has(index) ? "[Hide]" : "[Show]"}
+                                        </a>
+                                    </div>
+
+                                    {
+                                        toggled().has(index)
+                                            ? <div>{translation}</div>
+                                            : <div class="text-transparent hover:text-black">{translation}</div>
+                                    }
+                                </div>
+                            </li>
+                        ))}
+                    </ol>
                 </section>
             }
-        </main>
+        </>
     );
 }
