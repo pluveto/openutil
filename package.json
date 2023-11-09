@@ -1,5 +1,5 @@
 {
-  "name": "vite-template-solid",
+  "name": "openutil",
   "version": "0.0.0",
   "description": "",
   "scripts": {
@@ -23,8 +23,9 @@
     "vite-plugin-solid": "^2.7.0"
   },
   "dependencies": {
+    "@solidjs/meta": "^0.29.1",
     "@solidjs/router": "^0.8.2",
     "solid-icons": "^1.1.0",
-    "solid-js": "^1.7.6"
+    "solid-js": "^1.8.5"
   }
 }

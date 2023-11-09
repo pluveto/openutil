@@ -2,6 +2,7 @@
 import './index.css';
 
 import { render } from 'solid-js/web';
+import { MetaProvider } from '@solidjs/meta';
 import { Router, hashIntegration } from '@solidjs/router';
 import App from './app';
 
@@ -15,9 +16,11 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 
 render(
   () => (
-    <Router source={hashIntegration()}>
-      <App />
-    </Router>
+    <MetaProvider>
+      <Router source={hashIntegration()}>
+        <App />
+      </Router>
+    </MetaProvider>
   ),
   root,
 );
