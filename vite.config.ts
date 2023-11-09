@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
+import fs from 'fs';
+import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [
@@ -15,5 +17,15 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
+    rollupOptions: {
+      plugins: [
+        {
+          'name': 'create-cname',
+          writeBundle() {
+            fs.writeFileSync(resolve(__dirname, 'dist', 'CNAME'), 'openutil.ry.rs');
+          }
+        }
+      ],
+    },
   },
 });
