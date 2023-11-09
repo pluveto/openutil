@@ -1,6 +1,8 @@
 import { createSignal } from "solid-js";
 import { IoArrowBack } from 'solid-icons/io'
 import { useSearchParams } from "@solidjs/router";
+import { Title } from "@solidjs/meta";
+import { createTitle } from "../../../common/misc-util";
 enum Mode {
     Edit = 'edit',
     View = 'view',
@@ -46,7 +48,8 @@ export default function Index() {
     }
 
     return (
-        <main class="bg-gray-100 text-gray-700 p-8">
+        <>
+            <Title>{createTitle("Translation Trainer")}</Title>
             <h1 class="text-2xl font-bold">Translation Trainer</h1>
             {
                 mode() === Mode.Edit &&
@@ -113,6 +116,6 @@ export default function Index() {
                     </ol>
                 </section>
             }
-        </main>
+        </>
     );
 }
