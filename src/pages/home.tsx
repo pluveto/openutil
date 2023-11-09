@@ -1,7 +1,7 @@
 export default function Home() {
 
   return (
-    <main class="bg-gray-100 text-gray-700 p-8">
+    <>
       <h1 class="text-2xl font-bold">Home</h1>
       <p class="mt-4">
         OpenUtil is a open source project that
@@ -11,6 +11,6 @@ export default function Home() {
       <ul>
         <li><a href="#/u/trans-trainer">Translate Trainer</a></li>
       </ul>
-    </main>
+    </>
   );
 }
