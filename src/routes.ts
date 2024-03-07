@@ -23,6 +23,10 @@ export const routes: RouteDefinition[] = [
     component: lazy(() => import('./pages/utils/pass-gen/index')),
   },
   {
+    path: '/u/math-delim-converter',
+    component: lazy(() => import('./pages/utils/math-delim-converter')),
+  },
+  {
     path: '**',
     component: lazy(() => import('./errors/404')),
   },
