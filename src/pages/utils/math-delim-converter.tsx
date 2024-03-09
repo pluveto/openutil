@@ -8,6 +8,7 @@ export default function MathjaxDelimiterConverter() {
     const replaceDelimiters = () => {
         let updatedText = text();
         // 替换 \[ \] 为 $$$$（注意：可能需要根据实际 Mathjax 配置调整）
+        updatedText = updatedText.replace(/\\\( /g, '$$').replace(/ \\\)/g, '$$');
         updatedText = updatedText.replace(/\\\[/g, '$$$$').replace(/\\\]/g, '$$$$');
         // 替换 \( \) 为 $$（注意：可能需要根据实际 Mathjax 配置调整）
         updatedText = updatedText.replace(/\\\(/g, '$$').replace(/\\\)/g, '$$');
