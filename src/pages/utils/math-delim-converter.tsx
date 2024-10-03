@@ -11,7 +11,7 @@ export default function MathjaxDelimiterConverter() {
         // Replace $$ $$ with $$$$
         updatedText = updatedText.replace(/\\$$/g, '$$$$').replace(/\\\\$$/g, '$$$$');
         // Replace $$ $$ with $$
-        updatedText \= updatedText.replace(/\\\\\$$/g, '$$').replace(/\\\\$$/g, '$$');
+        updatedText = updatedText.replace(/\\\\\$$/g, '$$').replace(/\\\\$$/g, '$$');
         return updatedText;
     };
 
