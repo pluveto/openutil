@@ -3,15 +3,13 @@ import { createSignal, createEffect } from "solid-js";
 export default function MathjaxDelimiterConverter() {
     const [text, setText] = createSignal('');
     const [convertedText, setConvertedText] = createSignal('');
-    const [isDarkMode, setIsDarkMode] = createSignal(false);
 
     // Function to replace Mathjax delimiters
     const replaceDelimiters = (input) => {
         let updatedText = input;
-        // Replace $$ $$ with $$$$
-        updatedText = updatedText.replace(/\\$$/g, '$$$$').replace(/\\\\$$/g, '$$$$');
-        // Replace $$ $$ with $$
-        updatedText = updatedText.replace(/\\\\\$$/g, '$$').replace(/\\\\$$/g, '$$');
+        updatedText = updatedText.replace(/\\\( /g, '$$').replace(/ \\\)/g, '$$');
+        updatedText = updatedText.replace(/\\\[/g, '$$$$').replace(/\\\]/g, '$$$$');
+        updatedText = updatedText.replace(/\\\(/g, '$$').replace(/\\\)/g, '$$');
         return updatedText;
     };
 
@@ -22,41 +20,30 @@ export default function MathjaxDelimiterConverter() {
         setConvertedText(converted);
     });
 
-    // Toggle dark mode
-    const toggleDarkMode = () => {
-        setIsDarkMode(!isDarkMode());
-    };
-
     return (
-        <div class={isDarkMode() ? "bg-gray-900 text-white" : "bg-white text-black"}>
+        <div class="bg-white text-black dark:bg-gray-900 dark:text-white">
             <h1 class="text-2xl font-bold">Mathjax Delimiter Converter</h1>
             <section class="mt-2">
-                <p class={isDarkMode() ? "text-gray-300" : "text-gray-600"}>
+                <p class="text-gray-600 dark:text-gray-300">
                     Enter or paste text with Mathjax delimiters (e.g., $$ $$, $$$$ ) below:
                 </p>
                 <textarea
-                    class={`mt-4 w-full h-24 p-2 ${isDarkMode() ? "bg-gray-800 text-white" : "bg-white text-black"}`}
+                    class="mt-4 w-full h-24 p-2 bg-white text-black dark:bg-gray-800 dark:text-white"
                     placeholder="Enter text here"
                     onInput={(e) => setText(e.currentTarget.value)}
                     value={text()}
                 />
             </section>
             <section class="mt-4">
-                <p class={isDarkMode() ? "text-gray-300" : "text-gray-600"}>
+                <p class="text-gray-600 dark:text-gray-300">
                     Converted text with updated delimiters:
                 </p>
                 <textarea
-                    class={`mt-2 w-full h-24 p-2 ${isDarkMode() ? "bg-gray-800 text-white" : "bg-white text-black"}`}
+                    class="mt-2 w-full h-24 p-2 bg-white text-black dark:bg-gray-800 dark:text-white"
                     readonly
                     value={convertedText()}
                 />
             </section>
-            <button
-                class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={toggleDarkMode}
-            >
-                Toggle Dark Mode
-            </button>
         </div>
     );
 }
