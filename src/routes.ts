@@ -27,6 +27,10 @@ export const routes: RouteDefinition[] = [
     component: lazy(() => import('./pages/utils/math-delim-converter')),
   },
   {
+    path: '/u/zhihu-converter',
+    component: lazy(() => import('./pages/utils/zhihu-converter')),
+  },
+  {
     path: '**',
     component: lazy(() => import('./errors/404')),
   },
