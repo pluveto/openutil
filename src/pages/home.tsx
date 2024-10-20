@@ -12,6 +12,7 @@ export default function Home() {
         <li><a href="#/u/trans-trainer">Translate Trainer</a></li>
         <li><a href="#/u/pass-gen">Password Generator</a></li>
         <li><a href="#/u/math-delim-converter">Mathjax Delimiter Converter</a></li>
+        <li><a href="#/u/zhihu-converter">Zhihu Latex Import Converter</a></li>
       </ul>
     </>
   );
