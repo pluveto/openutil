@@ -26,6 +26,7 @@
     "@solidjs/meta": "^0.29.1",
     "@solidjs/router": "^0.8.2",
     "solid-icons": "^1.1.0",
-    "solid-js": "^1.8.5"
+    "solid-js": "^1.8.5",
+    "@solid-primitives/upload": "^0.1.0"
   }
 }
