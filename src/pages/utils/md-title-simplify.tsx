@@ -1,7 +1,7 @@
 import { createSignal, Show } from "solid-js";
 import { FileEntry, createDropZone } from "@solid-primitives/upload";
 
-export default function MDProcessor() {
+export default function MdTitleSimplify() {
   const [inputText, setInputText] = createSignal("");
   const [processedText, setProcessedText] = createSignal("");
   const [isDragging, setIsDragging] = createSignal(false);
