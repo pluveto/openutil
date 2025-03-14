@@ -31,6 +31,10 @@ export const routes: RouteDefinition[] = [
     component: lazy(() => import('./pages/utils/zhihu-converter')),
   },
   {
+    path: '/u/md-title-simplify',
+    component: lazy(() => import('./pages/utils/md-title-simplify')),
+  },
+  {
     path: '**',
     component: lazy(() => import('./errors/404')),
   },
