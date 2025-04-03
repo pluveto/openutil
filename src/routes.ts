@@ -35,6 +35,10 @@ export const routes: RouteDefinition[] = [
     component: lazy(() => import('./pages/utils/md-title-simplify')),
   },
   {
+    path: '/u/md-title-level-adjuster',
+    component: lazy(() => import('./pages/utils/md-title-level-adjuster')),
+  },
+  {
     path: '**',
     component: lazy(() => import('./errors/404')),
   },

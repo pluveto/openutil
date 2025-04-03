@@ -1,6 +1,6 @@
 import { createSignal, Show } from "solid-js";
 
-export default function MdTitleSimplify() {
+export default function MdTitleLevelAdjuster() {
   const [inputText, setInputText] = createSignal("");
   const [processedText, setProcessedText] = createSignal("");
   const [isDragging, setIsDragging] = createSignal(false);
@@ -21,26 +21,20 @@ export default function MdTitleSimplify() {
   const handleDrop = (e: DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    console.log(e.dataTransfer)
     if (!e.dataTransfer?.items.length) return;
 
-    // 获取第一个拖放的文件
     const item = e.dataTransfer.items[0];
-
-    // 确认是文件类型
     if (item.kind !== 'file') {
       alert('请拖放文件而非文本或链接');
       return;
     }
 
-    // 获取文件对象
     const file = item.getAsFile();
     if (!file) {
       alert('无法获取文件对象');
       return;
     }
 
-    // 调用已验证的handleFile
     handleFile(file);
   };
 
@@ -53,48 +47,58 @@ export default function MdTitleSimplify() {
         const content = e.target?.result;
         if (typeof content === 'string') {
           setInputText(content);
-          console.log("成功读取文件内容:", content.length, "字符");
-        } else {
-          console.error("读取的文件内容不是文本格式");
         }
         resolve();
       };
 
       reader.onerror = () => {
-        console.error("文件读取错误:", reader.error);
         alert("文件读取失败");
         reject(reader.error);
       };
 
-      reader.onabort = () => {
-        console.warn("文件读取被中止");
-        reject(new Error("读取被中止"));
-      };
-
-      // 明确指定编码为UTF-8
       reader.readAsText(file, 'UTF-8');
     });
   };
 
-  // 核心处理逻辑
-  const processContent = (content: string) => {
+  // 增加标题层级
+  const increaseLevels = (content: string) => {
     return content.split('\n').map(line => {
       const headingMatch = line.match(/^(#{1,6})\s(.*)/);
       if (headingMatch) {
         let [_, level, content] = headingMatch;
-        content = content
-          .replace(/\*\*(.*?)\*\*/g, '$1')        // 移除加粗
-          .replace(/^(\d+\.)+\d+\s*/, '')        // 移除编号
-          .trim();
-        return content ? `${level} ${content}` : line;
+        // 最多只能有6个#号
+        if (level.length < 6) {
+          level = '#' + level;
+        }
+        return `${level} ${content}`;
+      }
+      return line;
+    }).join('\n');
+  };
+
+  // 减少标题层级
+  const decreaseLevels = (content: string) => {
+    return content.split('\n').map(line => {
+      const headingMatch = line.match(/^(#{1,6})\s(.*)/);
+      if (headingMatch) {
+        let [_, level, content] = headingMatch;
+        // 最少要有1个#号
+        if (level.length > 1) {
+          level = level.slice(1);
+        }
+        return `${level} ${content}`;
       }
       return line;
     }).join('\n');
   };
 
   // 处理文本转换
-  const handleProcess = () => {
-    setProcessedText(processContent(inputText()));
+  const handleIncrease = () => {
+    setProcessedText(increaseLevels(inputText()));
+  };
+
+  const handleDecrease = () => {
+    setProcessedText(decreaseLevels(inputText()));
   };
 
   // 处理文件下载
@@ -103,7 +107,7 @@ export default function MdTitleSimplify() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "processed.md";
+    a.download = "adjusted.md";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -118,7 +122,7 @@ export default function MdTitleSimplify() {
 
   return (
     <div class="container mx-auto p-4 max-w-3xl">
-      <h1 class="text-2xl font-bold mb-6">Markdown 去除加粗和编号</h1>
+      <h1 class="text-2xl font-bold mb-6">Markdown 标题层级调整器</h1>
 
       {/* 文件拖放区域 */}
       <div
@@ -152,17 +156,24 @@ export default function MdTitleSimplify() {
         onPaste={handlePaste}
         placeholder="在此粘贴或输入 Markdown 内容..."
         class="mb-4 w-full h-24 p-2 bg-white text-black dark:bg-gray-800 dark:text-white"
-
       />
 
       {/* 操作按钮 */}
       <div class="flex gap-3 mb-4">
         <button
-          onClick={handleProcess}
+          onClick={handleIncrease}
           class="px-4 py-2 bg-blue-500 text-white rounded-md
                  hover:bg-blue-600 transition-colors"
         >
-          处理文本
+          增加层级 (+)
+        </button>
+
+        <button
+          onClick={handleDecrease}
+          class="px-4 py-2 bg-purple-500 text-white rounded-md
+                 hover:bg-purple-600 transition-colors"
+        >
+          减少层级 (-)
         </button>
 
         <Show when={processedText()}>
@@ -178,8 +189,8 @@ export default function MdTitleSimplify() {
 
       {/* 处理结果预览 */}
       <Show when={processedText()}>
-        <div class="border rounded-md p-4 bg-gray-50 dark:bg-gray-900">
-          <pre class="whitespace-pre-wrap ">{processedText()}</pre>
+      <div class="border rounded-md p-4 bg-gray-50 dark:bg-gray-900">
+          <pre class="whitespace-pre-wrap">{processedText()}</pre>
         </div>
       </Show>
     </div>
