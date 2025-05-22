@@ -15,6 +15,7 @@ export default function Home() {
         <li><a href="#/u/zhihu-converter">Zhihu Latex Import Converter</a></li>
         <li><a href="#/u/md-title-simplify">Markdown Title Simplifier</a></li>
         <li><a href="#/u/md-title-level-adjuster">Markdown Title Level Adjuster</a></li>
+        <li><a href="#/u/code-line-numberer">Code Line Numberer</a></li>
       </ul>
     </>
   );
