@@ -2,10 +2,10 @@
 import { createSignal, Show } from "solid-js";
 
 export default function MdTitleLevelAdjuster() {
-  const [inputText, setInputText] = createSignal("");
-  const [processedText, setProcessedText] = createSignal("");
+  // Use a single signal for the text content, making it the single source of truth.
+  const [textContent, setTextContent] = createSignal("");
   const [isDragging, setIsDragging] = createSignal(false);
-  const [copySuccessMessage, setCopySuccessMessage] = createSignal(""); // For copy feedback
+  const [copySuccessMessage, setCopySuccessMessage] = createSignal("");
 
   let dropzoneRef: HTMLDivElement;
 
@@ -44,9 +44,9 @@ export default function MdTitleLevelAdjuster() {
       reader.onload = (e) => {
         const content = e.target?.result;
         if (typeof content === 'string') {
-          setInputText(content);
-          setProcessedText(""); // Clear previous processed text when new file is loaded
-          setCopySuccessMessage(""); // Clear copy message
+          // Set the single text state when a file is loaded
+          setTextContent(content);
+          setCopySuccessMessage("");
         }
         resolve();
       };
@@ -87,18 +87,20 @@ export default function MdTitleLevelAdjuster() {
   };
 
   const handleIncrease = () => {
-    setProcessedText(increaseLevels(processedText() || inputText()));
+    // Always operate on the current text content
+    setTextContent(increaseLevels(textContent()));
     setCopySuccessMessage("");
   };
 
   const handleDecrease = () => {
-    setProcessedText(decreaseLevels(processedText() || inputText()));
+    // Always operate on the current text content
+    setTextContent(decreaseLevels(textContent()));
     setCopySuccessMessage("");
   };
 
   const handleDownload = () => {
-    if (!processedText()) return;
-    const blob = new Blob([processedText()], { type: "text/markdown" });
+    if (!textContent()) return;
+    const blob = new Blob([textContent()], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -108,28 +110,27 @@ export default function MdTitleLevelAdjuster() {
   };
 
   const handlePaste = (e: ClipboardEvent) => {
+    e.preventDefault(); // Prevent default paste to control the flow
     const pastedText = e.clipboardData?.getData('text/plain');
     if (pastedText) {
-      setInputText(pastedText);
-      setProcessedText(""); // Clear processed text if input changes
+      // Set the single text state on paste
+      setTextContent(pastedText);
       setCopySuccessMessage("");
     }
   };
 
-  // 新增：处理复制结果
   const handleCopyResult = async () => {
-    if (!processedText()) return;
+    if (!textContent()) return;
     try {
-      await navigator.clipboard.writeText(processedText());
+      await navigator.clipboard.writeText(textContent());
       setCopySuccessMessage("已复制到剪贴板!");
-      setTimeout(() => setCopySuccessMessage(""), 2000); // 2秒后清除消息
+      setTimeout(() => setCopySuccessMessage(""), 2000);
     } catch (err) {
       console.error("复制失败: ", err);
       setCopySuccessMessage("复制失败!");
       setTimeout(() => setCopySuccessMessage(""), 2000);
     }
   };
-
 
   return (
     <div class="container mx-auto p-4 max-w-3xl">
@@ -164,15 +165,15 @@ export default function MdTitleLevelAdjuster() {
       </div>
 
       <textarea
-        value={inputText()}
+        // The textarea now directly uses and updates the single textContent signal
+        value={textContent()}
         onInput={(e) => {
-            setInputText(e.currentTarget.value);
-            setProcessedText(""); // Clear processed on input change
-            setCopySuccessMessage("");
+          setTextContent(e.currentTarget.value);
+          setCopySuccessMessage("");
         }}
         onPaste={handlePaste}
-        placeholder="在此粘贴或输入 Markdown 内容..."
-        rows="5"
+        placeholder="在此粘贴、拖放文件或输入 Markdown 内容..."
+        rows="10" // Increased rows for better visibility
         class="mb-4 w-full p-3 border border-gray-300 rounded-md shadow-sm 
                focus:ring-blue-500 focus:border-blue-500
                bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
@@ -181,7 +182,7 @@ export default function MdTitleLevelAdjuster() {
       <div class="flex flex-wrap gap-3 mb-4 items-center">
         <button
           onClick={handleIncrease}
-          disabled={!inputText()}
+          disabled={!textContent()}
           class="px-4 py-2 bg-blue-500 text-white rounded-md
                  hover:bg-blue-600 transition-colors disabled:opacity-50"
         >
@@ -190,14 +191,15 @@ export default function MdTitleLevelAdjuster() {
 
         <button
           onClick={handleDecrease}
-          disabled={!inputText()}
+          disabled={!textContent()}
           class="px-4 py-2 bg-purple-500 text-white rounded-md
                  hover:bg-purple-600 transition-colors disabled:opacity-50"
         >
           减少层级 (-)
         </button>
 
-        <Show when={processedText()}>
+        {/* These buttons are now shown whenever there is text */}
+        <Show when={textContent()}>
           <button
             onClick={handleDownload}
             class="px-4 py-2 bg-green-500 text-white rounded-md
@@ -205,7 +207,6 @@ export default function MdTitleLevelAdjuster() {
           >
             下载结果
           </button>
-          {/* 新增复制按钮 */}
           <button
             onClick={handleCopyResult}
             class="px-4 py-2 bg-teal-500 text-white rounded-md
@@ -221,12 +222,7 @@ export default function MdTitleLevelAdjuster() {
         </Show>
       </div>
 
-      <Show when={processedText()}>
-      <div class="border border-gray-200 dark:border-gray-700 rounded-md p-4 bg-gray-50 dark:bg-gray-900/50">
-          <h3 class="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-200">处理结果预览:</h3>
-          <pre class="whitespace-pre-wrap text-sm text-gray-800 dark:text-gray-200">{processedText()}</pre>
-        </div>
-      </Show>
+      {/* The separate preview area is no longer needed as the textarea provides a live view */}
     </div>
   );
 }
