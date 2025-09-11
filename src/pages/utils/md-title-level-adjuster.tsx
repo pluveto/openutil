@@ -87,12 +87,12 @@ export default function MdTitleLevelAdjuster() {
   };
 
   const handleIncrease = () => {
-    setProcessedText(increaseLevels(inputText()));
+    setProcessedText(increaseLevels(processedText() || inputText()));
     setCopySuccessMessage("");
   };
 
   const handleDecrease = () => {
-    setProcessedText(decreaseLevels(inputText()));
+    setProcessedText(decreaseLevels(processedText() || inputText()));
     setCopySuccessMessage("");
   };
 
@@ -110,7 +110,7 @@ export default function MdTitleLevelAdjuster() {
   const handlePaste = (e: ClipboardEvent) => {
     const pastedText = e.clipboardData?.getData('text/plain');
     if (pastedText) {
-      setInputText(prev => prev + pastedText);
+      setInputText(pastedText);
       setProcessedText(""); // Clear processed text if input changes
       setCopySuccessMessage("");
     }
